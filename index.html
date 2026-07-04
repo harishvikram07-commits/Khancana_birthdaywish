@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Khancana 🎉</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+
+  :root{
+    --teal-deep:#0b3d3a;
+    --teal-mid:#0f5c56;
+    --gold:#d9b154;
+    --gold-bright:#f0cd7a;
+    --magenta:#b5215a;
+    --cream:#fdf6e8;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html, body{
+    height:100%;
+    overflow:hidden;
+    background:var(--teal-deep);
+    font-family:'Manrope', sans-serif;
+    color:var(--cream);
+  }
+
+  .stage{
+    position:relative;
+    width:100vw;
+    height:100svh;
+  }
+
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6vw;
+    opacity:0;
+    pointer-events:none;
+    transform:scale(1.04);
+    transition:opacity 0.9s ease, transform 1s ease;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(217,177,84,0.14), transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(181,33,90,0.18), transparent 55%),
+      var(--teal-deep);
+  }
+  .slide.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:scale(1);
+  }
+
+  .eyebrow{
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:0.72rem;
+    color:var(--gold-bright);
+    margin-bottom:1.4rem;
+  }
+
+  h1.big{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(2.6rem, 10vw, 5.6rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  h1.big em{
+    font-style:italic;
+    font-weight:300;
+    color:var(--gold-bright);
+    display:block;
+  }
+
+  .sub{
+    margin-top:1.6rem;
+    max-width:34ch;
+    font-size:1.05rem;
+    color:rgba(253,246,232,0.75);
+  }
+
+  .tap-hint{
+    position:absolute;
+    bottom:6vh;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:0.75rem;
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    color:rgba(253,246,232,0.55);
+    animation:pulseHint 2s ease-in-out infinite;
+  }
+  @keyframes pulseHint{
+    0%,100%{opacity:0.4;}
+    50%{opacity:0.95;}
+  }
+
+  /* ---------- Slide 3: message card ---------- */
+  .message-card{
+    max-width:640px;
+    background:linear-gradient(165deg, rgba(15,92,86,0.55), rgba(11,61,58,0.35));
+    border:1px solid rgba(217,177,84,0.3);
+    border-radius:28px;
+    padding:clamp(1.8rem, 5vw, 3.4rem);
+    backdrop-filter:blur(6px);
+  }
+  .message-card p{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-size:clamp(1.05rem, 2.4vw, 1.4rem);
+    line-height:1.6;
+  }
+  .message-card .signoff{
+    margin-top:1.6rem;
+    font-family:'Manrope';
+    font-size:1rem;
+    font-weight:700;
+    color:var(--gold-bright);
+  }
+
+  .next-btn{
+    margin-top:2.4rem;
+    padding:0.9rem 2.2rem;
+    border-radius:999px;
+    border:1px solid var(--gold-bright);
+    background:transparent;
+    color:var(--gold-bright);
+    font-family:'Manrope';
+    font-weight:600;
+    font-size:0.95rem;
+    letter-spacing:0.03em;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  }
+  .next-btn:hover{
+    background:var(--gold-bright);
+    color:var(--teal-deep);
+    transform:translateY(-2px);
+  }
+
+  /* ---------- Slide 4: finale slideshow video ---------- */
+  #slide4{ padding:0; }
+  .finale-video-wrap{
+    position:absolute;
+    inset:0;
+    background:#000;
+  }
+  .finale-video-wrap video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:brightness(0.62) saturate(1.05);
+  }
+  .sound-btn{
+    position:absolute;
+    top:5vh;
+    right:6vw;
+    z-index:3;
+    padding:0.6rem 1.1rem;
+    border-radius:999px;
+    border:1px solid var(--gold-bright);
+    background:rgba(11,61,58,0.55);
+    color:var(--gold-bright);
+    font-family:'Manrope';
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    display:none;
+  }
+  .sound-btn.show{ display:block; }
+
+  .finale-overlay{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:0 6vw;
+  }
+  .finale-overlay h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(2.2rem, 8vw, 4.4rem);
+    text-shadow:0 4px 30px rgba(0,0,0,0.5);
+  }
+  .finale-overlay h1 span{
+    color:var(--gold-bright);
+    font-style:italic;
+    font-weight:400;
+    display:block;
+  }
+  .finale-sub{
+    margin-top:1rem;
+    font-size:1rem;
+    color:rgba(253,246,232,0.85);
+    text-shadow:0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .music-note{
+    position:absolute;
+    bottom:5vh;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:2;
+    font-size:0.8rem;
+    letter-spacing:0.1em;
+    color:rgba(253,246,232,0.7);
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .eq{display:flex; gap:3px; align-items:flex-end; height:14px;}
+  .eq span{
+    width:3px;
+    background:var(--gold-bright);
+    border-radius:2px;
+    animation:eq 1s ease-in-out infinite;
+  }
+  .eq span:nth-child(1){height:5px; animation-delay:0s;}
+  .eq span:nth-child(2){height:13px; animation-delay:0.15s;}
+  .eq span:nth-child(3){height:8px; animation-delay:0.3s;}
+  .eq span:nth-child(4){height:14px; animation-delay:0.1s;}
+  @keyframes eq{
+    0%,100%{transform:scaleY(0.4);}
+    50%{transform:scaleY(1);}
+  }
+
+  /* ---------- Background animations: balloons ---------- */
+  .bg-anim{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .balloon{
+    position:absolute;
+    bottom:-140px;
+    width:52px;
+    height:66px;
+    border-radius:50% 50% 50% 50% / 58% 58% 42% 42%;
+    animation:floatUp linear infinite;
+    opacity:0.85;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    top:100%;
+    width:1px;
+    height:60px;
+    background:rgba(253,246,232,0.35);
+    transform:translateX(-50%);
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) translateX(0) rotate(-4deg); }
+    50%{ transform:translateY(-55vh) translateX(20px) rotate(4deg); }
+    100%{ transform:translateY(-115vh) translateX(-10px) rotate(-4deg); }
+  }
+
+  /* confetti */
+  .confetto{
+    position:absolute;
+    top:-20px;
+    width:8px;
+    height:14px;
+    opacity:0.9;
+    animation:fall linear infinite;
+  }
+  @keyframes fall{
+    0%{ transform:translateY(0) rotate(0deg); }
+    100%{ transform:translateY(115vh) rotate(400deg); }
+  }
+
+  /* twinkles for slide 2 */
+  .twinkle{
+    position:absolute;
+    border-radius:50%;
+    background:var(--gold-bright);
+    animation:twinkle ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:0.15; transform:scale(0.8);}
+    50%{opacity:0.9; transform:scale(1.2);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .balloon, .confetto, .twinkle{ animation:none !important; opacity:0.3; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- SLIDE 1 -->
+  <section class="slide active" id="slide1">
+    <div class="bg-anim" id="bgAnim1"></div>
+    <span class="eyebrow">A Little Something For You</span>
+    <h1 class="big">Hi<em>Khancana…</em></h1>
+    <p class="sub">Come here for a second 👀</p>
+    <span class="tap-hint">tap anywhere to continue</span>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide" id="slide2">
+    <div class="bg-anim" id="bgAnim2"></div>
+    <span class="eyebrow">Shh… It's A Secret</span>
+    <h1 class="big">Are u ready<em>for the surprise,<br>birthday girl?</em></h1>
+    <span class="tap-hint">tap anywhere to continue</span>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="slide" id="slide3">
+    <div class="bg-anim" id="bgAnim3"></div>
+    <span class="eyebrow">From Your Brother</span>
+    <div class="message-card">
+      <p>
+        Happy birthday to my little sister ❤️ I'm so grateful to have a sister like you
+        to walk with me through life. We may fight sometimes, but I'll always love you
+        and you've been nothing but the best to me. I wish you nothing but happiness for
+        this special day and every day. Be confident and keep pushing through all of
+        life's battles, and I'll be there for you always.
+      </p>
+      <p class="signoff">Happy Birthday 🥳 🎉🎊❤️</p>
+    </div>
+    <button class="next-btn" id="revealBtn">See your surprise 🎁</button>
+  </section>
+
+  <!-- SLIDE 4 : finale -->
+  <section class="slide" id="slide4">
+    <div class="bg-anim" id="bgAnim4"></div>
+    <div class="finale-video-wrap">
+      <video id="finaleVideo" src="slideshow.mp4" playsinline preload="auto"></video>
+    </div>
+    <button class="sound-btn" id="soundBtn">🔊 Tap for sound</button>
+    <div class="finale-overlay">
+      <h1>Happy Birthday<span>Khancana 🦚</span></h1>
+      <p class="finale-sub">Here's to another year of you being amazing.</p>
+    </div>
+    <div class="music-note">
+      <div class="eq"><span></span><span></span><span></span><span></span></div>
+      <span id="musicLabel">playing your song…</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = ['slide1','slide2','slide3','slide4'];
+  let current = 0;
+
+  function goNext(){
+    if(current >= slides.length - 1) return;
+    document.getElementById(slides[current]).classList.remove('active');
+    current++;
+    document.getElementById(slides[current]).classList.add('active');
+    if(slides[current] === 'slide4'){
+      startFinale();
+    }
+  }
+
+  // click anywhere on slides 1 & 2 to advance
+  document.getElementById('slide1').addEventListener('click', goNext);
+  document.getElementById('slide2').addEventListener('click', goNext);
+
+  // slide 3 advances only via button (so the message can be read fully)
+  document.getElementById('revealBtn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    goNext();
+  });
+
+  // keyboard support
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter'){
+      if(current === 2) return; // require button on slide 3
+      goNext();
+    }
+  });
+
+  // ---------- Finale: slideshow video with sound ----------
+  let finaleStarted = false;
+  function startFinale(){
+    if(finaleStarted) return;
+    finaleStarted = true;
+
+    const video = document.getElementById('finaleVideo');
+    const soundBtn = document.getElementById('soundBtn');
+    const musicLabel = document.getElementById('musicLabel');
+
+    video.currentTime = 0;
+    video.muted = false;
+    video.volume = 1;
+
+    // Played synchronously inside the click that opened this slide,
+    // so the browser treats it as a direct user gesture and allows sound.
+    const playPromise = video.play();
+
+    if(playPromise !== undefined){
+      playPromise.catch(()=>{
+        // Some browsers still block sound-on autoplay even inside a gesture chain.
+        // Show a one-tap fallback instead of failing silently.
+        musicLabel.textContent = 'tap for sound';
+        soundBtn.classList.add('show');
+        soundBtn.addEventListener('click', ()=>{
+          video.muted = false;
+          video.play();
+          soundBtn.classList.remove('show');
+          musicLabel.textContent = 'playing your song…';
+        }, { once:true });
+      });
+    }
+  }
+
+  // ---------- Background animation generators ----------
+  function makeBalloons(container, count){
+    const colors = ['#d9b154','#b5215a','#0f5c56','#f0cd7a'];
+    let html = '';
+    for(let i=0;i<count;i++){
+      const left = Math.random()*100;
+      const dur = 10 + Math.random()*8;
+      const delay = Math.random()*10;
+      const color = colors[i % colors.length];
+      const scale = 0.7 + Math.random()*0.6;
+      html += `<div class="balloon" style="left:${left}%; background:${color}; animation-duration:${dur}s; animation-delay:-${delay}s; transform:scale(${scale});"></div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function makeConfetti(container, count){
+    const colors = ['#d9b154','#f0cd7a','#b5215a','#0f5c56','#fdf6e8'];
+    let html = '';
+    for(let i=0;i<count;i++){
+      const left = Math.random()*100;
+      const dur = 6 + Math.random()*6;
+      const delay = Math.random()*8;
+      const color = colors[i % colors.length];
+      html += `<div class="confetto" style="left:${left}%; background:${color}; animation-duration:${dur}s; animation-delay:-${delay}s;"></div>`;
+    }
+    container.innerHTML += html;
+  }
+
+  function makeTwinkles(container, count){
+    let html = '';
+    for(let i=0;i<count;i++){
+      const left = Math.random()*100;
+      const top = Math.random()*100;
+      const size = 2 + Math.random()*4;
+      const dur = 1.5 + Math.random()*2.5;
+      const delay = Math.random()*3;
+      html += `<div class="twinkle" style="left:${left}%; top:${top}%; width:${size}px; height:${size}px; animation-duration:${dur}s; animation-delay:-${delay}s;"></div>`;
+    }
+    container.innerHTML += html;
+  }
+
+  makeBalloons(document.getElementById('bgAnim1'), 10);
+  makeConfetti(document.getElementById('bgAnim1'), 14);
+
+  makeTwinkles(document.getElementById('bgAnim2'), 40);
+  makeBalloons(document.getElementById('bgAnim2'), 6);
+
+  makeConfetti(document.getElementById('bgAnim3'), 10);
+
+  makeConfetti(document.getElementById('bgAnim4'), 30);
+  makeBalloons(document.getElementById('bgAnim4'), 8);
+</script>
+
+</body>
+</html>
